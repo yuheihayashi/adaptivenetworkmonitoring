@@ -1,0 +1,39 @@
+@startuml
+
+package "AdaptiveNetworkMonitoring" {
+  [currentize_router_models]
+  [show_current_netflow_monitoring_statuses]
+  [show_current_router_models]
+  [show_candidate_router_models]
+  [alluser_netflow_monitoring]
+  [golduser_netflow_monitoring]
+  [halt_netflow_monitoring]
+  [commit_candidate_router_models]
+  [acm_demo]
+}
+
+package "RouterModel" {
+  [currentize_router_model]
+  [show_current_netflow_monitoring_status]
+  [show_router_model]
+  [clear_netflow_monitoring]
+  [commit_router_model]
+}
+
+[acm_demo] --> [halt_netflow_monitoring]
+[acm_demo] --> [alluser_netflow_monitoring]
+[acm_demo] --> [golduser_netflow_monitoring]
+[acm_demo] --> [commit_candidate_router_models]
+[acm_demo] --> [show_current_netflow_monitoring_statuses]
+
+[currentize_router_models] --> [currentize_router_model]
+
+[show_current_netflow_monitoring_statuses] --> [show_current_netflow_monitoring_status]
+
+[show_current_router_models] --> [show_router_model]
+[show_candidate_router_models] --> [show_router_model]
+
+[commit_candidate_router_models] --> [clear_netflow_monitoring]
+[commit_candidate_router_models] --> [commit_router_model]
+
+@enduml

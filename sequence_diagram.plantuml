@@ -1,0 +1,79 @@
+@startuml
+
+participant  NetworkAdmin
+box "adaptive network monitoring lib" #Lightblue
+participant AdaptiveNetworkMonitoring
+participant RouterModel
+end box
+participant Router
+
+== Initialize Adaptive Network Monitoring Object ==
+NetworkAdmin -> AdaptiveNetworkMonitoring : AdaptiveNetworkMonitoring(routers_csv)
+
+loop for each row of csv
+AdaptiveNetworkMonitoring -> RouterModel : Router(router_name, router_ip, ssh_id, ssh_pass)
+end
+
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : currentize_router_models()
+
+loop for each router_model in current_router_models
+AdaptiveNetworkMonitoring -> RouterModel : currentize_router_model()
+RouterModel -> RouterModel : get_runnning_netflow_configuration()
+RouterModel -> Router : get runnning netflow_configuration
+Router -> RouterModel : return netflow_configuration
+RouterModel -> RouterModel : parse_netflow_configuration(netflow_configuration)
+RouterModel -> AdaptiveNetworkMonitoring : return success
+end
+AdaptiveNetworkMonitoring -> NetworkAdmin  : return success
+==  ==
+
+== Demonstraion Adaptive Network Monitoring ==
+NetworkAdmin -> AdaptiveNetworkMonitoring : acm_demo()
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : alluser_netflow_monitoring()
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : commit_candidate_router_models()
+loop for each router_model in candidate_router_models
+AdaptiveNetworkMonitoring -> RouterModel : clear_netflow_monitoring()
+RouterModel -> Router : get_runnning_netflow_configuration()
+Router -> RouterModel : return netflow_configuration
+RouterModel -> Router : delete runnning netflow netflow_configuration
+RouterModel -> AdaptiveNetworkMonitoring : return success
+AdaptiveNetworkMonitoring -> RouterModel : commit_router_model()
+RouterModel -> Router : configure netflow configuration
+RouterModel -> AdaptiveNetworkMonitoring : return success
+end
+
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : show_current_netflow_monitoring_statuses()
+
+loop for each router_model in current_router_models
+AdaptiveNetworkMonitoring -> RouterModel : show_current_netflow_monitoring_statuse()
+RouterModel -> Router : get netflow status
+Router -> RouterModel : return netflow status
+RouterModel -> AdaptiveNetworkMonitoring : return netflow status
+end
+
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : golduser_netflow_monitoring()
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : commit_candidate_router_models()
+loop for each router_model in candidate_router_models
+AdaptiveNetworkMonitoring -> RouterModel : clear_netflow_monitoring()
+RouterModel -> Router : get_runnning_netflow_configuration()
+Router -> RouterModel : return netflow_configuration
+RouterModel -> Router : delete runnning netflow netflow_configuration
+RouterModel -> AdaptiveNetworkMonitoring : return success
+AdaptiveNetworkMonitoring -> RouterModel : commit_router_model()
+RouterModel -> Router : configure netflow configuration
+RouterModel -> AdaptiveNetworkMonitoring : return success
+end
+
+AdaptiveNetworkMonitoring -> AdaptiveNetworkMonitoring : show_current_netflow_monitoring_statuses()
+
+loop for each router_model in current_router_models
+AdaptiveNetworkMonitoring -> RouterModel : show_current_netflow_monitoring_statuse()
+RouterModel -> Router : get netflow status
+Router -> RouterModel : return netflow status
+RouterModel -> AdaptiveNetworkMonitoring : return netflow status
+end
+
+AdaptiveNetworkMonitoring -> NetworkAdmin : return success
+==  ==
+
+@enduml
