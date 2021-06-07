@@ -1,0 +1,10 @@
+configure
+no flow exporter-map [exportermap_name]
+no flow monitor-map [monitormap_name]
+no sampler-map [samplermap_name]
+intefec [interface_name]
+ no flow datalinkframesection monitor [モニタマップ名] sampler [サンプラーマップ名] ingress
+!
+exit
+commit
+exit

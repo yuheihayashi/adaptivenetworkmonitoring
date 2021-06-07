@@ -1,0 +1,1 @@
+show flow exporter [exportermap_name] location 0/0/CPU0

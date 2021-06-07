@@ -1,0 +1,36 @@
+configure
+
+#exporter map configuration
+flow exporter-map [exportermap_name]
+ version ipfix
+ !
+ transport udp [udp_port_num]
+ source Loopback0
+ destination [collector_ipaddr]
+!
+#monitor map configuration
+flow monitor-map [monitormap_name]
+ record datalinksectiondump
+ exporter [exportermap_name]
+ cache immediate
+ cache entries [num_cache]
+ cache timeout rate-limit [seconds]
+!
+#sampler map configuration
+sampler-map [samplermap_name]
+ random 1 out-of [sampling_rate]
+!
+#commit
+exit
+commit
+exit
+
+#apply ipfix to interface
+configure
+interface [interface_name]
+ flow datalinkframesection monitor [モニタマップ名] sampler [サンプラーマップ名] ingress
+!
+#commit
+exit
+commit
+exit
