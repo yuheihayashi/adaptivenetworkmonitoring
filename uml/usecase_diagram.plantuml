@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+
+actor NetworkAdmin as N
+
+package AdaptiveNetworkMonitoring {
+  usecase "Initialize Adaptive Network Monitoring Object" as ANM1
+  usecase "Demonstraion Adaptive Network Monitoring" as ANM2
+}
+
+N --> ANM1
+N --> ANM2
+
+@enduml

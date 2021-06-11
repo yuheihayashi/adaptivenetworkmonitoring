@@ -1,0 +1,4 @@
+show run flow exporter-map [exportermap_name]
+show run flow monitor-map [monitormap_name]
+show run sampler-map [samplermap_name]
+show interface [interface_name]

@@ -1,0 +1,92 @@
+@startuml
+
+title Adaptive Network Monitoring Class Diagram
+
+AdaptiveNetworkMonitoring "1" o-- "1..n" RouterModel
+RouterModel "1" o-- "1..n" NetflowMonitorMap
+RouterModel "1" o-- "1..n" NetflowExporterMap
+RouterModel "1" o-- "1..n" NetflowSamplerMap
+RouterModel "1" o-- "1..n" "Interface"
+NetflowMonitorMap "1" o-- "1" NetflowExporterMap
+"Interface" "1" o-- "1" NetflowSamplerMap
+"Interface" "1" o-- "1" NetflowMonitorMap
+
+class AdaptiveNetworkMonitoring {
+  String network_name
+  RouterModel[] current_router_models ' have current router models in the network
+  RouterModel[] candidate_router_models ' have candidate router models in the network
+
+  AdaptiveNetworkMonitoring AdaptiveNetworkMonitoring(routers_csv)
+
+  bool currentize_router_models() ' currentizes current_router_models by using csv. The csv includes router_name, router_ip, ssh_id, ssh_pass.
+
+  void show_current_netflow_monitoring_statuses() ' shows monitoring status of current_router_models.
+  void show_current_router_models()
+  void show_candidate_router_models()
+
+  void alluser_netflow_monitoring() ' makes candidate_router_models which monitors all user.
+  void golduser_netflow_monitoring() ' makes candidate router models which monitors all user gold user.
+  void halt_netflow_monitoring() ' makes candidate_router_models which monitors nothing.
+
+  bool commit_candidate_router_models() ' configures and commits netflow configuration by using candidate_router_models.
+
+  bool acm_demo()
+}
+
+class RouterModel {
+  String router_name
+  Address router_ip
+  String ssh_id
+  String ssh_pass
+  NetflowExporterMap[] netflow_exportermaps
+  NetflowMonitorMap[] netflow_monitormaps
+  NetflowSamplerMap[] netflow_samplermaps
+  Interface[] interfaces
+
+  Router Router(router_name, router_ip, ssh_id, ssh_pass, netflow_exportermaps, netflow_monitormaps, netflow_samplermaps, interfaces)
+
+  bool currentize_router_model() ' get running netflow configuration and currentizes netflow_exportermaps, netflow_monitormaps, netflow_samplermaps, interfaces
+
+  void get_runnning_netflow_configuration()
+  void parse_netflow_configuration(String netflow_configuration)
+
+  void show_current_netflow_monitoring_statuse() ' get runnning netflow status and shows it.
+  void show_router_model() ' shows model of this router.
+
+  bool clear_netflow_monitoring() ' deletes netflow configuration.
+  bool commit_router_model() ' configures and commits netflow configuration by using this model.
+}
+
+class NetflowExporterMap {
+  String netflow_exporter_name
+  Address collector_addr
+  Int collector_udp_port
+
+  NetflowExporterMap NetflowExporterMap(netflow_exporter_name, collector_addr, collector_udp_port)
+}
+
+class NetflowMonitorMap {
+  String netflow_monitormap_name
+  Int num_chache
+  Int chache_timeout
+  NetflowExporterMap netflowexportermap
+
+  NetflowMonitorMap NetflowMonitorMap(netflow_monitormap_name, num_cache, chache_timeout, netflowexportermap)
+}
+
+class NetflowSamplerMap {
+  String samplermap_name
+  Int sampring_rate
+
+  NetflowSamplerMap NetflowSamplerMap(samplermap_name, sampring_rate)
+}
+
+class "Interface" {
+  String interface_name
+  NetflowSamplerMap samplermap
+  NetflowMonitorMap netflow_monitormap
+
+  Interface Interface(interface_name, samplermap, netflow_monitormap)
+}
+
+@enduml
