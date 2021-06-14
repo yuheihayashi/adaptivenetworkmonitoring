@@ -74,7 +74,7 @@ class NetflowMonitorMap {
   NetflowMonitorMap NetflowMonitorMap(netflow_monitormap_name, num_cache, chache_timeout, netflowexportermap)
 }
 
-class NetflowSamplerMap {
+class SamplerMap {
   String samplermap_name
   Int sampring_rate
 
