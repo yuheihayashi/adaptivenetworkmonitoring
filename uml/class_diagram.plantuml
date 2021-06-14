@@ -50,7 +50,7 @@ class RouterModel {
   void get_runnning_netflow_configuration()
   void parse_netflow_configuration(String netflow_configuration)
 
-  void show_current_netflow_monitoring_statuse() ' get runnning netflow status and shows it.
+  void show_current_netflow_monitoring_status() ' get runnning netflow status and shows it.
   void show_router_model() ' shows model of this router.
 
   bool clear_netflow_monitoring() ' deletes netflow configuration.
